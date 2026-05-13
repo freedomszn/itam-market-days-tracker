@@ -14,6 +14,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
+import { Analytics } from "@vercel/analytics/react";
 import {
   buildMonthGrid,
   dayNames,
@@ -686,6 +687,7 @@ export default function App() {
         <span className="size-2 rounded-full bg-lime" />
         <span className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-white">Active Cycle</span>
       </div>
+      <Analytics />
     </BrowserRouter>
   );
 }
