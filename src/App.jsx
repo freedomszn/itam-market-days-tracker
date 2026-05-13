@@ -156,7 +156,7 @@ function Hero({ nextMarketDay, countdown }) {
               <CalendarDays size={18} />
               View Schedule
             </Link>
-            <a
+            {/* <a
               href={whatsappHref}
               target="_blank"
               rel="noreferrer"
@@ -164,7 +164,7 @@ function Hero({ nextMarketDay, countdown }) {
             >
               <MessageCircle size={18} />
               Ask WhatsApp Bot
-            </a>
+            </a> */}
           </div>
         </div>
 
