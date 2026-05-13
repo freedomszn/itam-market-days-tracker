@@ -138,7 +138,7 @@ function Hero({ nextMarketDay, countdown }) {
         <div className="min-w-0">
           <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-line bg-panel px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted sm:mb-5 sm:text-xs sm:tracking-[0.14em]">
             <span className="rounded bg-lime px-2 py-0.5 font-bold text-lime-ink">Live</span>
-            <span className="truncate">8-day rotation, Sunday shifts to Saturday</span>
+            <span className="truncate">keep track of every cycle, never miss a market day again</span>
           </div>
           <h1 className="max-w-5xl text-balance font-display text-[clamp(2.35rem,12vw,5rem)] font-bold leading-[1] tracking-normal text-white sm:text-6xl lg:text-7xl xl:text-8xl">
             Next Market Day is{" "}
