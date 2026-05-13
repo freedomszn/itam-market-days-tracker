@@ -505,7 +505,7 @@ function NotificationModal({ isOpen, onClose, nextMarketDay }) {
           body: JSON.stringify(payload),
         });
         setStatus("saved");
-        setMessage("You are on the reminder list. Your details were sent to the notification sheet.");
+        setMessage("You are on the reminder list. You'll be notified of upcoming market days.");
         setForm({ name: "", phone: "", email: "" });
       } catch {
         setStatus("error");
