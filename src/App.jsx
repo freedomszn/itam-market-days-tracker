@@ -331,7 +331,7 @@ function CalendarSection({ marketDays, now, standalone = false }) {
             <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-lime">Monthly View</p>
             <h2 className="mt-3 font-display text-3xl font-bold text-white sm:text-5xl">Market calendar</h2>
           </div>
-          <div className="flex items-center gap-2 border border-line bg-panel p-2">
+          <div className="flex items-center justify-between gap-2 border border-line bg-panel p-2">
             <button
               type="button"
               onClick={() => moveMonth(-1)}
