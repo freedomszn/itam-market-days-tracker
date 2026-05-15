@@ -129,7 +129,7 @@ function StatCard({ value, label }) {
   );
 }
 
-function Hero({ nextMarketDay, countdown }) {
+function Hero({ nextMarketDay, countdown, onNotify }) {
   const whatsappHref = `https://wa.me/?text=${getWhatsAppMessage(nextMarketDay)}`;
 
   return (
@@ -157,6 +157,14 @@ function Hero({ nextMarketDay, countdown }) {
               <CalendarDays size={18} />
               View Schedule
             </Link>
+            <button
+              type="button"
+              onClick={onNotify}
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded bg-lime px-6 py-3 font-display font-bold text-lime-ink transition hover:bg-white"
+            >
+              <Bell size={18} />
+              Get Notified
+            </button>
             {/* <a
               href={whatsappHref}
               target="_blank"
@@ -666,7 +674,7 @@ export default function App() {
             path="/"
             element={
               <>
-                <Hero nextMarketDay={nextMarketDay} countdown={countdown} />
+                <Hero nextMarketDay={nextMarketDay} countdown={countdown} onNotify={() => setNotifyOpen(true)} />
                 <LogicSection marketDays={marketDays} />
               </>
             }
