@@ -135,11 +135,11 @@ function Hero({ nextMarketDay, todayMarketDay, countdown, onNotify }) {
 
   return (
     <section id="countdown" className="hero-grid border-b border-line pt-20 sm:pt-28">
-      <div className="section-shell grid min-h-[calc(100svh-4rem)] content-center gap-6 py-8 sm:gap-10 sm:py-12 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center lg:py-20">
+      <div className="section-shell grid min-h-[calc(100svh-4rem)] content-center gap-6 py-8 sm:gap-10 sm:py-12 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-start lg:py-20">
         <div className="min-w-0">
           <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-line bg-panel px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted sm:mb-5 sm:text-xs sm:tracking-[0.14em]">
             <span className="rounded bg-lime px-2 py-0.5 font-bold text-lime-ink">Live</span>
-            <span className="truncate">8-day rotation, Sunday shifts to Monday</span>
+            <span className="truncate">For Itam shoppers and vendors. Never miss a cycle</span>
           </div>
           <h1 className="max-w-5xl text-balance font-display text-[clamp(2.35rem,12vw,5rem)] font-bold leading-[1] tracking-normal text-white sm:text-6xl lg:text-7xl xl:text-8xl">
             {isMarketDayToday ? (
@@ -154,8 +154,7 @@ function Hero({ nextMarketDay, todayMarketDay, countdown, onNotify }) {
             )}
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-6 text-muted sm:mt-6 sm:text-lg sm:leading-7">
-            The tracker advances the cycle by 8 days,
-            moves Sunday market days to Monday, and keeps reminders aligned for shoppers and vendors.
+            Itam Market rotates every 8 days and skips Sundays. This tracker handles all of that automatically — calculating each upcoming date, adjusting for the Monday shift, and sending reminders before the market opens. No more missed days.
           </p>
 
           <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row">
@@ -221,12 +220,10 @@ function LogicSection({ marketDays }) {
         <div>
           <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-lime">System Logic</p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold text-white sm:text-5xl">
-            App is designed to help remove mentally tracking market days.
+            Never miss a market day again.
           </h2>
           <p className="mt-5 max-w-2xl leading-7 text-muted">
-            Starting from Monday, May 18, 2026, the underlying pattern advances by 8 days.
-            That makes the next market day Tuesday of the following week. If a calculated
-            market day falls on Sunday, it is moved to Monday.
+            The app automatically tracks the Itam market's 8-day cycle, so you always know exactly when the next market day falls — no mental counting, no guessing. Whether you're a shopper planning your week or a vendor preparing your goods, you'll get timely reminders and stay ahead of every market day.
           </p>
         </div>
 
