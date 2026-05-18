@@ -138,15 +138,15 @@ function Hero({ nextMarketDay, countdown, onNotify }) {
         <div className="min-w-0">
           <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-line bg-panel px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted sm:mb-5 sm:text-xs sm:tracking-[0.14em]">
             <span className="rounded bg-lime px-2 py-0.5 font-bold text-lime-ink">Live</span>
-            <span className="truncate">keep track of every cycle, never miss a market day again</span>
+            <span className="truncate">8-day rotation, Sunday shifts to Monday</span>
           </div>
           <h1 className="max-w-5xl text-balance font-display text-[clamp(2.35rem,12vw,5rem)] font-bold leading-[1] tracking-normal text-white sm:text-6xl lg:text-7xl xl:text-8xl">
             Next Market Day is{" "}
             <span className="text-lime">{dayNames[nextMarketDay.date.getDay()]}</span>
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-6 text-muted sm:mt-6 sm:text-lg sm:leading-7">
-            ITAM Market runs on a rotating weekly pattern. The tracker calculates the next date,
-            handles the Sunday exception, and prepares reminders for shoppers and vendors.
+            Today, Monday May 18, 2026, is a market day. The tracker advances the cycle by 8 days,
+            moves Sunday market days to Monday, and keeps reminders aligned for shoppers and vendors.
           </p>
 
           <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row">
@@ -196,7 +196,7 @@ function Hero({ nextMarketDay, countdown, onNotify }) {
           {nextMarketDay.exception && (
             <div className="mt-4 border border-clay-strong bg-clay-strong/20 p-4 text-sm text-clay">
               Sunday exception applied. The pattern landed on{" "}
-              {formatDateLong(nextMarketDay.originalDate)}, so the market moved to Saturday.
+              {formatDateLong(nextMarketDay.originalDate)}, so the market moved to Monday.
             </div>
           )}
         </div>
@@ -215,9 +215,9 @@ function LogicSection({ marketDays }) {
             App is designed to help remove mentally tracking market days.
           </h2>
           <p className="mt-5 max-w-2xl leading-7 text-muted">
-            Starting from Monday, May 11, 2026, the underlying pattern advances by 8 days.
-            That makes each market day appear one weekday later. If the calculated day is
-            Sunday, the public market date is the Saturday immediately before it.
+            Starting from Monday, May 18, 2026, the underlying pattern advances by 8 days.
+            That makes the next market day Tuesday of the following week. If a calculated
+            market day falls on Sunday, it is moved to Monday.
           </p>
         </div>
 
@@ -233,7 +233,8 @@ function LogicSection({ marketDays }) {
             <CalendarDays className="mb-5 text-clay" />
             <h3 className="font-display text-2xl font-bold text-white">Sunday exception</h3>
             <p className="mt-3 text-sm leading-6 text-muted">
-              No market is shown on Sunday. The app tags the shifted Saturday as an exception.
+              When Sunday shifts to Monday, the next regular cycle still lands on Monday.
+              After those two Monday sessions, the cycle resumes normally on Tuesday.
             </p>
           </div>
           <div className="hard-card p-6 sm:col-span-2">
@@ -261,11 +262,18 @@ function LogicSection({ marketDays }) {
 function MarketDayCard({ item, index, now }) {
   const wait = daysUntil(item.date, now);
   const label = wait === 0 ? "Today" : wait === 1 ? "Tomorrow" : `In ${wait} days`;
+  const statusLabel = index === 0
+    ? wait === 0 ? "Today" : "Next"
+    : item.exception
+      ? "Sunday Shift"
+      : item.followsShiftedSunday
+        ? "Regular Monday"
+        : label;
 
   return (
     <article
       className={`hard-card p-5 transition hover:border-lime sm:p-6 ${index === 0 ? "border-2 border-lime lime-glow" : ""
-        } ${item.exception ? "border-clay-strong" : ""}`}
+        } ${item.exception || item.followsShiftedSunday ? "border-clay-strong" : ""}`}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -277,15 +285,17 @@ function MarketDayCard({ item, index, now }) {
           </h3>
         </div>
         <span
-          className={`shrink-0 rounded px-2 py-1 font-mono text-[10px] font-bold uppercase ${index === 0 ? "bg-lime text-lime-ink" : item.exception ? "bg-clay text-background" : "bg-panel-high text-muted"
+          className={`shrink-0 rounded px-2 py-1 font-mono text-[10px] font-bold uppercase ${index === 0 ? "bg-lime text-lime-ink" : item.exception || item.followsShiftedSunday ? "bg-clay text-background" : "bg-panel-high text-muted"
             }`}
         >
-          {index === 0 ? "Next" : item.exception ? "Exception" : label}
+          {statusLabel}
         </span>
       </div>
       <div className="mt-6 border-t border-line-soft pt-4 font-mono text-sm text-muted">
         {item.exception ? (
           <span>Shifted from {formatDateLong(item.originalDate)}</span>
+        ) : item.followsShiftedSunday ? (
+          <span>Regular Monday market after the shifted Sunday session</span>
         ) : (
           <span>08:00 AM to 04:00 PM</span>
         )}
@@ -389,8 +399,10 @@ function CalendarSection({ marketDays, now, standalone = false }) {
                         {cell.market.isPast ? "Past" : "Itam"}
                       </div>
                     )}
-                    {cell.market?.exception && (
-                      <div className="mt-1 hidden font-mono text-[10px] text-clay sm:block">Sun shift</div>
+                    {(cell.market?.exception || cell.market?.followsShiftedSunday) && (
+                      <div className="mt-1 hidden font-mono text-[10px] text-clay sm:block">
+                        {cell.market.exception ? "Moved from Sun" : "Regular Mon"}
+                      </div>
                     )}
                   </>
                 )}
@@ -406,7 +418,9 @@ function CalendarSection({ marketDays, now, standalone = false }) {
 function BotSection({ nextMarketDay, standalone = false }) {
   const [question, setQuestion] = useState("When is the next ITAM market day?");
   const answer = nextMarketDay.exception
-    ? `The next market day is ${formatDateLong(nextMarketDay.date)}. The normal pattern landed on Sunday, so it was moved to Saturday.`
+    ? `The next market day is ${formatDateLong(nextMarketDay.date)}. The normal pattern landed on Sunday, so it was moved to Monday.`
+    : nextMarketDay.followsShiftedSunday
+      ? `The next market day is ${formatDateLong(nextMarketDay.date)}. This is the regular Monday market after the shifted Sunday session.`
     : `The next market day is ${formatDateLong(nextMarketDay.date)}, from 8:00 AM to 4:00 PM.`;
 
   return (
@@ -661,7 +675,7 @@ export default function App() {
     const end = new Date(now.getFullYear(), now.getMonth() + 12, 0);
     return generateMarketDaysRange(start, end);
   }, [now]);
-  const nextMarketDay = marketDays[0];
+  const nextMarketDay = marketDays.find((item) => daysUntil(item.date, now) > 0) || marketDays[0];
   const countdown = getCountdownParts(nextMarketDay.date, now);
 
   return (

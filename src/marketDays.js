@@ -1,4 +1,4 @@
-const ANCHOR_DATE = new Date(2026, 4, 11, 8, 0, 0);
+const ANCHOR_DATE = new Date(2026, 4, 18, 8, 0, 0);
 const MARKET_OPEN_HOUR = 8;
 const MARKET_CLOSE_HOUR = 16;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -51,9 +51,9 @@ function scheduledFromPattern(patternDate) {
     };
   }
 
-  const saturday = addDays(patternDate, -1);
+  const monday = addDays(patternDate, 1);
   return {
-    date: withMarketOpenTime(saturday),
+    date: withMarketOpenTime(monday),
     originalDate: withMarketOpenTime(patternDate),
     exception: true,
   };
@@ -73,11 +73,13 @@ function withCloseTime(date) {
 function buildMarketDay(cycle) {
   const patternDate = addDays(ANCHOR_DATE, cycle * 8);
   const scheduled = scheduledFromPattern(patternDate);
+  const previousPatternDate = addDays(ANCHOR_DATE, (cycle - 1) * 8);
 
   return {
     ...scheduled,
     closeTime: withCloseTime(scheduled.date),
     cycle,
+    followsShiftedSunday: cycle > 0 && previousPatternDate.getDay() === 0 && patternDate.getDay() === 1,
   };
 }
 
