@@ -129,8 +129,9 @@ function StatCard({ value, label }) {
   );
 }
 
-function Hero({ nextMarketDay, countdown, onNotify }) {
+function Hero({ nextMarketDay, todayMarketDay, countdown, onNotify }) {
   const whatsappHref = `https://wa.me/?text=${getWhatsAppMessage(nextMarketDay)}`;
+  const isMarketDayToday = Boolean(todayMarketDay);
 
   return (
     <section id="countdown" className="hero-grid border-b border-line pt-20 sm:pt-28">
@@ -141,11 +142,19 @@ function Hero({ nextMarketDay, countdown, onNotify }) {
             <span className="truncate">8-day rotation, Sunday shifts to Monday</span>
           </div>
           <h1 className="max-w-5xl text-balance font-display text-[clamp(2.35rem,12vw,5rem)] font-bold leading-[1] tracking-normal text-white sm:text-6xl lg:text-7xl xl:text-8xl">
-            Next Market Day is{" "}
-            <span className="text-lime">{dayNames[nextMarketDay.date.getDay()]}</span>
+            {isMarketDayToday ? (
+              <>
+                Today is <span className="text-lime">Itam Market Day.</span>
+              </>
+            ) : (
+              <>
+                Next Market Day is{" "}
+                <span className="text-lime">{dayNames[nextMarketDay.date.getDay()]}</span>
+              </>
+            )}
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-6 text-muted sm:mt-6 sm:text-lg sm:leading-7">
-            Today, Monday May 18, 2026, is a market day. The tracker advances the cycle by 8 days,
+            The tracker advances the cycle by 8 days,
             moves Sunday market days to Monday, and keeps reminders aligned for shoppers and vendors.
           </p>
 
@@ -421,7 +430,7 @@ function BotSection({ nextMarketDay, standalone = false }) {
     ? `The next market day is ${formatDateLong(nextMarketDay.date)}. The normal pattern landed on Sunday, so it was moved to Monday.`
     : nextMarketDay.followsShiftedSunday
       ? `The next market day is ${formatDateLong(nextMarketDay.date)}. This is the regular Monday market after the shifted Sunday session.`
-    : `The next market day is ${formatDateLong(nextMarketDay.date)}, from 8:00 AM to 4:00 PM.`;
+      : `The next market day is ${formatDateLong(nextMarketDay.date)}, from 8:00 AM to 4:00 PM.`;
 
   return (
     <section id="bot" className={`py-14 sm:py-20 ${standalone ? "pt-28 sm:pt-32" : ""}`}>
@@ -676,6 +685,7 @@ export default function App() {
     return generateMarketDaysRange(start, end);
   }, [now]);
   const nextMarketDay = marketDays.find((item) => daysUntil(item.date, now) > 0) || marketDays[0];
+  const todayMarketDay = marketDays.find((item) => daysUntil(item.date, now) === 0);
   const countdown = getCountdownParts(nextMarketDay.date, now);
 
   return (
@@ -688,7 +698,12 @@ export default function App() {
             path="/"
             element={
               <>
-                <Hero nextMarketDay={nextMarketDay} countdown={countdown} onNotify={() => setNotifyOpen(true)} />
+                <Hero
+                  nextMarketDay={nextMarketDay}
+                  todayMarketDay={todayMarketDay}
+                  countdown={countdown}
+                  onNotify={() => setNotifyOpen(true)}
+                />
                 <LogicSection marketDays={marketDays} />
               </>
             }
