@@ -153,6 +153,10 @@ export function formatShortMonth(date) {
   return monthNames[date.getMonth()].slice(0, 3).toUpperCase();
 }
 
+export function twoDigits(value) {
+  return String(value).padStart(2, "0");
+}
+
 export function daysUntil(date, now = new Date()) {
   const targetStart = atStartOfDay(date);
   const nowStart = atStartOfDay(now);
