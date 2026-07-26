@@ -61,7 +61,7 @@ input {
 .section-shell {
   width: min(100%, 1280px);
   margin-inline: auto;
-  padding-inline: clamp(1rem, 4vw, 4rem);
+  padding-inline: clamp(1.5rem, 5vw, 5rem);
 }
 
 .hard-card {
